@@ -1,0 +1,40 @@
+{
+  "wallstreet:businesstype_brokerage": "Brokerage",
+  "wallstreet:businesstype_brokerage_alias": "Brokerage",
+  "wallstreet:skill_broker": "Broker",
+  "wallstreet:itemname_commission": "Trading Commissions",
+
+  "wallstreet:alias_brokerage": "Brokerage",
+  "wallstreet:alias_capital": "Capital",
+  "wallstreet:alias_securities": "Securities",
+  "wallstreet:alias_partners": "Partners",
+  "wallstreet:alias_tradinghouse": "Trading House",
+  "wallstreet:alias_advisors": "Advisors",
+  "wallstreet:alias_holdings": "Holdings",
+  "wallstreet:alias_markets": "Markets",
+  "wallstreet:alias_investments": "Investments",
+  "wallstreet:alias_asset": "Asset Management",
+
+  "wallstreet:transaction_trading_profit": "Trading desk profits at {businessName}",
+  "wallstreet:transaction_trading_profit_label": "Trading Profit",
+  "wallstreet:transaction_trading_loss": "Trading desk losses at {businessName}",
+  "wallstreet:transaction_trading_loss_label": "Trading Loss",
+  "wallstreet:transaction_capital_commit": "Floor capital moved for {businessName}",
+  "wallstreet:transaction_capital_commit_label": "Floor Capital",
+  "wallstreet:category_trading": "Trading",
+
+  "wallstreet:contact_description": "Floor Manager",
+  "wallstreet-floormanager": "Floor Manager",
+  "wallstreet:alert_market_crisis": "Markets in crisis - trading desks are exposed",
+  "wallstreet:alert_market_choppy": "Markets turning choppy",
+  "wallstreet:alert_market_normal": "Markets have settled",
+  "wallstreet:alert_market_bull": "Markets rallying - desks are running hot",
+  "wallstreet:alert_blowup": "A trading desk blew up",
+
+  "wallstreet_options_header": "Wall Street",
+  "wallstreet_capital_label": "Committed capital",
+  "wallstreet_capital_value": "${value}M",
+  "wallstreet_risk_label": "Risk appetite",
+  "wallstreet_risk_value": "{value}%",
+  "wallstreet_compliance_label": "Retain compliance officer (2% of profit)"
+}

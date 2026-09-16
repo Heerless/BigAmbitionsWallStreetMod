@@ -17,11 +17,12 @@ namespace WallStreet
     public static class FloorTick
     {
         // Constants, not player-facing. These are the tuning dials.
-        // Tuned against play: 10M at the desk limit was returning ~1.1M a day when it should
-        // return roughly half that, and 16M was returning 5M - linear scaling made big floors
-        // absurd. The edge is roughly halved and large capital now tapers.
-        private const double EdgePerHour = 0.00045;  // 0.045% of a desk's slice, before modifiers
-        private const double VolPerHour = 0.0045;   // 0.45% standard deviation
+        // Tuned against logged play. The edge sets the level; volatility had been nine times
+        // the edge, which made a day's result a coin flip rather than a business - hours
+        // swung from -23k to +37k with nothing changed. Noise now sits well under the signal,
+        // so a well-run floor is reliably profitable and a bad day is a dip, not a verdict.
+        private const double EdgePerHour = 0.0026;   // 0.26% of a desk's slice, before modifiers
+        private const double VolPerHour = 0.0012;    // 0.12% standard deviation
         private const double BlowupChance = 0.002;    // per desk-hour with no compliance officer
         private const double BlowupMin = 0.15;
         private const double BlowupMax = 0.40;
@@ -101,7 +102,9 @@ namespace WallStreet
             var session = SessionWeight[((hourOfDay % 24) + 24) % 24];
 
             var expected = slice * EdgePerHour * risk * Regime * session * (0.4 + 0.6 * averageSkill);
-            var spread = slice * VolPerHour * risk * (1.3 - 0.5 * averageSkill);
+            // Risk raises the swing faster than it raises the return, so running hot is a
+            // real gamble rather than free money.
+            var spread = slice * VolPerHour * Math.Pow(risk, 1.5) * (1.3 - 0.5 * averageSkill);
 
             double total = 0.0;
             var blowups = 0;

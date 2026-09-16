@@ -65,6 +65,70 @@ namespace BAModTemplate.Editor
             Debug.Log("[CI] Brokerage icon written to " + AssetPath);
         }
 
+        /// <summary>
+        /// Draws the Broker skill icon: a climbing line with an arrowhead.
+        /// <para>
+        /// Skill icons appear on every employee row, so it has to read at a glance and stay
+        /// distinct from the Brokerage's candlestick. Without one, Brokers wear the Lawyer
+        /// icon they were cloned from.
+        /// </para>
+        /// </summary>
+        public static void CreateSkillIcon()
+        {
+            const string skillPath = "Assets/Mods/WallStreet/SkillIcon-Broker.png";
+
+            var texture = new Texture2D(Size, Size, TextureFormat.RGBA32, false);
+            var pixels = new Color[Size * Size];
+            for (var i = 0; i < pixels.Length; i++) pixels[i] = new Color(1f, 1f, 1f, 0f);
+            texture.SetPixels(pixels);
+
+            var ink = Color.white;
+
+            DrawLine(texture, ink, 18, 34, 58, 58, 8);
+            DrawLine(texture, ink, 58, 58, 98, 92, 8);
+
+            // Arrowhead, drawn as a triangle of narrowing rows.
+            for (var i = 0; i < 24; i++)
+                FillRect(texture, ink, 98 - i, 92 - i, (i * 2) + 2, 5);
+
+            texture.Apply();
+
+            var full = Path.Combine(Directory.GetCurrentDirectory(), skillPath);
+            File.WriteAllBytes(full, texture.EncodeToPNG());
+            Object.DestroyImmediate(texture);
+
+            AssetDatabase.ImportAsset(skillPath, ImportAssetOptions.ForceUpdate);
+
+            if (AssetImporter.GetAtPath(skillPath) is TextureImporter skillImporter)
+            {
+                skillImporter.textureType = TextureImporterType.Sprite;
+                skillImporter.spriteImportMode = SpriteImportMode.Single;
+                skillImporter.alphaIsTransparency = true;
+                skillImporter.mipmapEnabled = false;
+                skillImporter.filterMode = FilterMode.Bilinear;
+                skillImporter.textureCompression = TextureImporterCompression.Uncompressed;
+                skillImporter.assetBundleName = "wallstreet";
+                skillImporter.assetBundleVariant = "unity3d";
+                skillImporter.SaveAndReimport();
+            }
+
+            AssetDatabase.Refresh();
+            Debug.Log("[CI] Broker skill icon written to " + skillPath);
+        }
+
+        private static void DrawLine(Texture2D t, Color c, int x0, int y0, int x1, int y1, int thickness)
+        {
+            var steps = Mathf.Max(Mathf.Abs(x1 - x0), Mathf.Abs(y1 - y0));
+
+            for (var i = 0; i <= steps; i++)
+            {
+                var progress = (float)i / steps;
+                var x = Mathf.RoundToInt(Mathf.Lerp(x0, x1, progress));
+                var y = Mathf.RoundToInt(Mathf.Lerp(y0, y1, progress));
+                FillRect(t, c, x - thickness / 2, y - thickness / 2, thickness, thickness);
+            }
+        }
+
         private static void DrawCandle(Texture2D t, Color c, int x, int bodyLow, int bodyHigh, int wickLow, int wickHigh)
         {
             const int BodyWidth = 14;

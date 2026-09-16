@@ -27,6 +27,9 @@ namespace WallStreet
         /// <summary>The Sales-row product, registered once the city has loaded.</summary>
         public static Item? Commission { get; private set; }
 
+        /// <summary>The Broker skill icon, applied to the cloned skill at city load.</summary>
+        public static Sprite? BrokerIcon { get; private set; }
+
         private BusinessType? _brokerage;
         private Item? _commission;
 
@@ -52,6 +55,8 @@ namespace WallStreet
             // initialisation and drops anything added this early.
             _commission = bundle.LoadAsset<Item>(CommissionAsset);
             Commission = _commission;
+
+            BrokerIcon = bundle.LoadAsset<Sprite>("Assets/Mods/WallStreet/SkillIcon-Broker.png");
 
             context.Logger.Info(_commission == null
                 ? "[WallStreet] Commission.asset did not load; Sales will stay empty."

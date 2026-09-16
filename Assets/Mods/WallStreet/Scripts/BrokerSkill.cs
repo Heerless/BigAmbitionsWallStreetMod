@@ -75,6 +75,10 @@ namespace WallStreet
             SetMember(clone, dataType, "displayName", DisplayName);
             SetMember(clone, dataType, "baseHourlyWage", HourlyWage);
 
+            // Otherwise Brokers wear the Lawyer icon they were cloned from, on every row.
+            if (WallStreetInit.BrokerIcon != null)
+                SetMember(clone, dataType, "icon28", WallStreetInit.BrokerIcon);
+
             if (!Inject(helper, clone, dataType))
                 return false;
 
@@ -428,7 +432,11 @@ namespace WallStreet
             {
                 try
                 {
-                    field.SetValue(target, Convert.ChangeType(value, field.FieldType));
+                    // Reference types such as Sprite are not IConvertible, so only coerce
+                    // when the value does not already fit.
+                    field.SetValue(target, field.FieldType.IsInstanceOfType(value)
+                        ? value
+                        : Convert.ChangeType(value, field.FieldType));
                     return true;
                 }
                 catch (Exception e)
